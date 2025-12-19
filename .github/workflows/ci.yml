@@ -1,0 +1,25 @@
+name: Preprocessing Workflow Ali Assegaf
+on:
+  push:
+    branches: [ main ]
+jobs:
+  run-preprocessing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      - name: Run Preprocessing Script
+        run: python preprocessing/automate_Ali-Assegaf.py
+      - name: Commit and Push Processed Data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add heart_disease_preprocessed.csv || echo "No changes"
+          git commit -m "Update dataset preprocessed" || echo "No changes"
+          git push
