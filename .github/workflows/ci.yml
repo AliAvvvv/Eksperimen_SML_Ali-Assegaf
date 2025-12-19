@@ -5,21 +5,30 @@ on:
 jobs:
   run-preprocessing:
     runs-on: ubuntu-latest
+    # TAMBAHKAN BLOK INI UNTUK FIX ERROR 403
+    permissions:
+      contents: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Update ke v4 lebih stabil
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: pip install pandas scikit-learn
+
       - name: Run Preprocessing Script
         run: python preprocessing/automate_Ali-Assegaf.py
+
       - name: Commit and Push Processed Data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add heart_disease_preprocessed.csv || echo "No changes"
-          git commit -m "Update dataset preprocessed" || echo "No changes"
-          git push
+          git add heart_disease_preprocessed.csv
+          # Tambahkan git status untuk verifikasi
+          git status
+          git commit -m "Update dataset preprocessed" || echo "No changes to commit"
+          git push origin main
